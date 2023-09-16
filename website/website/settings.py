@@ -110,6 +110,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'store.middleware.WhitelistMiddleware',  # Your custom middleware
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 
