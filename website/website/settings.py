@@ -52,8 +52,8 @@ SOCIAL_AUTH_PIPELINE = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dev.motoverse.app','s.motoverse.app', 'qa.motoverse.app', 'www.motoverse.app', 'motoverse.app', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://dev.motoverse.app','https://s.motoverse.app','https://qa.motoverse.app', 'https://www.motoverse.app', 'https://motoverse.app']
+ALLOWED_HOSTS = ['www.kafkacoineth.com', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://www.kafkacoineth.com']
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
