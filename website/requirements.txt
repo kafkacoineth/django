@@ -1,0 +1,13 @@
+Django
+django-allauth
+social-auth-app-django
+mysql-connector-python
+mysqlclient
+stripe
+Pillow
+openai
+django-cors-headers
+django-allauth
+social_django
+social-auth-app-django
+sendgrid
