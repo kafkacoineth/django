@@ -246,8 +246,8 @@ def verify_email(request):
             to_emails=messageto,
             subject=messagesub,
             html_content=messagebody)
-        sg = SendGridAPIClient(os.environ.get('SENDGRID_AUTH'))
-        #sg = SendGridAPIClient('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')
+        #sg = SendGridAPIClient(os.environ.get('SENDGRID_AUTH'))
+        #sg = SendGridAPIClient('')
         response = sg.send(message)
         print(response.status_code, response.body, response.headers)
 
