@@ -12,6 +12,33 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+from celery import Celery
+
+# settings.py
+
+from celery.schedules import crontab
+
+
+
+# Set the default Django settings module for the 'celery' program.
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings')
+
+app = Celery('store')
+
+# Using Redis as the message broker
+app.config_from_object('django.conf:settings', namespace='CELERY')
+
+# Load task modules from all registered Django app configs.
+app.autodiscover_tasks()
+
+
+CELERY_BEAT_SCHEDULE = {
+    'my-periodic-task': {
+        'task': 'store.tasks.my_periodic_task',
+        'schedule': crontab(minute=1, hour=0),  # Run at midnight every day
+    },
+}
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
