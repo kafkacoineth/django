@@ -86,6 +86,9 @@ def get_csrf_token(request):
 def generate_id():
     return uuid.uuid4().hex
 
+
+
+
 def index(request):
     cart_id = request.COOKIES.get('cartId')
     if cart_id is None:
@@ -244,6 +247,37 @@ def add_user(request):
         form = UserCreationForm()
 
     return render(request, 'add_user.html', {'form': form, 'phone': phone, 'code': code})
+
+def get_wallet_history(request):
+    wallet_address = request.POST.get('wallet_address', '')
+    ## NEW CODE
+    # Query 1: Get token records
+    token_records = TokenRecord.objects.filter(token_owner=wallet_address)
+
+    # Query 2: Get token balances
+    token_balances = TokenBalance.objects.filter(token_owner=wallet_address)
+
+    # You now have the token records and balances for the given wallet_address
+    # You can use these results to display or process the wallet history as needed
+
+    # Example usage: printing the results
+    for record in token_records:
+        print(f"Token Record: {record}")
+
+    for balance in token_balances:
+        print(f"Token Balance: {balance}")
+        
+    # Create a dictionary to store the combined data
+    wallet_history = {
+        'token_records': [record.__str__() for record in token_records],
+        'token_balances': [balance.__str__() for balance in token_balances],
+    }
+
+    # Serialize the dictionary into a JSON response
+    response_data = json.dumps(wallet_history)
+
+    # Return a JSON response
+    return JsonResponse(response_data, safe=False)
 
 @login_required
 def add_wallet(request):

@@ -68,6 +68,7 @@ urlpatterns = [
     path('home/send_domestic_wire/', views.send_domestic_wire, name='send_domestic_wire'),
     path('home/send_check/', views.send_check, name='send_check'),
     path('home/add_wallet/', views.add_wallet, name='add_wallet'),
+    path('home/get_wallet_history/', views.get_wallet_history, name='get_wallet_history'),
 
 
 ]
