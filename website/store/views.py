@@ -248,8 +248,8 @@ def verify_email(request):
             html_content=messagebody)
         #sg = SendGridAPIClient(os.environ.get('SENDGRID_AUTH'))
         #sg = SendGridAPIClient('')
-        response = sg.send(message)
-        print(response.status_code, response.body, response.headers)
+        #response = sg.send(message)
+        #print(response.status_code, response.body, response.headers)
 
         return render(request, 'add_email_code.html')
     else :
