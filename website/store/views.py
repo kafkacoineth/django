@@ -274,7 +274,7 @@ def add_wallet(request):
             # Replace "YOUR_PUBLIC_KEY_HERE" with the actual public key
             actual_public_key = "-----BEGIN PUBLIC KEY-----\nYOUR_ACTUAL_PUBLIC_KEY_HERE\n-----END PUBLIC KEY-----"
             your_public_key_variable = your_public_key_variable_template.replace("YOUR_PUBLIC_KEY_HERE", signer_address)
-
+            print(your_public_key_variable)
 
             # Verify the signature
             if verify_signature(message, your_public_key_variable, signature):
