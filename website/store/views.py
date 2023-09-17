@@ -241,7 +241,6 @@ def add_wallet(request):
             signer_address = json_data["accountAddress"]
             signature = json_data["signature"]
 
-
             # Remove the "0x" prefix from the signature if it's present
             if signature.startswith("0x"):
                 signature = signature[2:]
@@ -252,7 +251,7 @@ def add_wallet(request):
             # Verify the signature
             w3 = Web3()
             message_hash = Web3.keccak(text=message).hex()
-            recovered_address = Account.recoverHash(message_hash, signature=signature_bytes)
+            recovered_address = w3.eth.account.recover(message_hash, signature=signature_bytes)
 
             # Compare the recovered address with the provided address
             if w3.toChecksumAddress(recovered_address) == w3.toChecksumAddress(signer_address):
