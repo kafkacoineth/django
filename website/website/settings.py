@@ -12,23 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
-from celery import Celery
 
-# settings.py
-
-from celery.schedules import crontab
-
-
-
-app = Celery('store')
-app.config_from_object('django.conf:settings', namespace='CELERY')
-app.autodiscover_tasks()
-app.conf.beat_schedule = {
-    'my-periodic-task': {
-        'task': 'store.tasks.my_periodic_task',
-        'schedule': 30,  # Run every 30 seconds
-    },
-}
 
 
 
