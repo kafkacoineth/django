@@ -134,4 +134,4 @@ class TokenBalance(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Token {self.contract_address} - {self.token_owner}"
+        return f"Token {self.contract_address_nft} - {self.token_owner}"
