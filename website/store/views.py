@@ -265,7 +265,8 @@ def add_wallet(request):
                 print("Signature is invalid.")
 
             print(json_data)
-        except json.JSONDecodeError:
+        except Exception as e:
+            print(f"JSON Decode Error: {e}")
             return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
 
