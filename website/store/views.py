@@ -221,6 +221,15 @@ def add_user(request):
 
     return render(request, 'add_user.html', {'form': form, 'phone': phone, 'code': code})
 
+add_wallet
+@login_required
+def verify_email(request):
+    user = request.user
+    wallet_address = request.GET.get('wallet_address', '')
+    user.wallet_address = wallet_address
+    user.save()
+    return redirect('my_profile')
+
 @login_required
 def verify_email(request):
     user = request.user

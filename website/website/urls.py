@@ -67,6 +67,7 @@ urlpatterns = [
     path('home/send_ach/', views.send_ach, name='send_ach'),
     path('home/send_domestic_wire/', views.send_domestic_wire, name='send_domestic_wire'),
     path('home/send_check/', views.send_check, name='send_check'),
+    path('home/add_wallet/', views.add_wallet, name='add_wallet'),
 
 
 ]
