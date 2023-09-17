@@ -123,3 +123,15 @@ class TokenRecord(models.Model):
 
     def __str__(self):
         return f"Token {self.token_id} - {self.token_owner}"
+
+class TokenBalance(models.Model):
+    contract_address_nft = models.CharField(max_length=255)
+    contract_address_erc20 = models.CharField(max_length=255)
+    token_owner = models.CharField(max_length=255)
+    token_count = models.IntegerField()  # Allow zero as a valid value
+    balance = models.DecimalField(max_digits=50, decimal_places=18)  # Increased max_digits to 50
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Token {self.contract_address} - {self.token_owner}"

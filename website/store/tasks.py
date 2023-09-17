@@ -9,8 +9,71 @@ from .models import UserManager, BankAccount, PhoneVerification, TokenRecord
 from .forms import UserCreationForm, EditProfileForm
 from web3 import Web3
 #celery_app = Celery('store')
+from django.db.models import Max, F
+from django.db.models import Subquery, OuterRef
+from collections import defaultdict
 
 app = Celery('website')
+@shared_task
+def my_periodic_task_balance():
+
+    # First, we'll create a subquery to get the latest updated_at timestamp for each token_id.
+    latest_updated_at_subquery = TokenRecord.objects.filter(
+        token_id=OuterRef('token_id')
+    ).values('token_id').annotate(
+        latest_updated_at=Max('updated_at')
+    ).values('latest_updated_at')
+
+    # Then, we'll use the subquery to filter the TokenRecord objects to get the latest record for each token_id.
+    latest_records = TokenRecord.objects.annotate(
+        latest_updated_at=Subquery(latest_updated_at_subquery)
+    ).filter(
+        updated_at=F('latest_updated_at')
+    )
+
+    for record in latest_records:
+        # You can access the fields of each record like this
+        contract_address = record.contract_address
+        token_id = record.token_id
+        token_owner = record.token_owner
+        created_at = record.created_at
+        updated_at = record.updated_at
+
+        # Now you can do whatever you need with these values for each record
+        print(f"Contract Address: {contract_address}")
+        print(f"Token ID: {token_id}")
+        print(f"Token Owner: {token_owner}")
+        print(f"Created At: {created_at}")
+        print(f"Updated At: {updated_at}")
+
+    # Initialize a dictionary to store token owners and their associated token IDs
+    token_owner_counts = defaultdict(list)
+
+    for record in latest_records:
+        token_owner = record.token_owner
+        token_id = record.token_id
+
+        # Append the token ID to the list associated with the token owner
+        token_owner_counts[token_owner].append(token_id)
+
+    # Initialize a dictionary to store the final result
+    result = {}
+
+    # Count the occurrences of each token ID for each token owner
+    for token_owner, token_ids in token_owner_counts.items():
+        token_id_count = len(token_ids)
+        result[token_owner] = {
+            'Token Owner': token_owner,
+            'Token ID Count': token_id_count,
+            'Token IDs': token_ids
+        }
+
+    # Print the result
+    for token_owner, data in result.items():
+        print(f"Token Owner: {data['Token Owner']}")
+        print(f"Token ID Count: {data['Token ID Count']}")
+        print(f"Token IDs: {data['Token IDs']}")
+        print()
 
 @shared_task
 def my_periodic_task():
