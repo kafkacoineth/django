@@ -573,16 +573,16 @@ def my_profile(request):
         print("POST request detected")
         print("Profile form saved")
         # Extract form field values
-        first_name = request.POST.get('firstName')
-        middle_name = request.POST.get('middleName')
-        last_name = request.POST.get('lastName')
+        x_handle = request.POST.get('x_handle','')
+        tg_handle = request.POST.get('tg_handle','')
+        ig_handle = request.POST.get('ig_handle','')
 
 
 
         try:
-            user.first_name = first_name
-            user.last_name = last_name
-            user.m_name = middle_name
+            user.x_handle = x_handle
+            user.tg_handle = tg_handle
+            user.ig_handle = ig_handle
             user.save()
         except Exception as e:
             print("Error saving user:", e)

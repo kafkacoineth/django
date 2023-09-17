@@ -30,7 +30,15 @@
       {% csrf_token %}
       <div class="form-group">
         <label for="mobile_number">Enter X Handle</label>
-        <input type="text" class="form-control" name="x_handle" id="x_handle" value="" required>
+        <input type="text" class="form-control" name="x_handle" id="x_handle" value="{{user.x_handle}}" required>
+      </div>
+      <div class="form-group">
+        <label for="mobile_number">Enter TG Handle</label>
+        <input type="text" class="form-control" name="tg_handle" id="tg_handle" value="{{user.tg_handle}}" required>
+      </div>
+      <div class="form-group">
+        <label for="mobile_number">Enter IG Handle</label>
+        <input type="text" class="form-control" name="ig_handle" id="ig_handle" value="{{user.ig_handle}}" required>
       </div>
       <div class="form-group">
         <label for="wallet_address">Wallet Address</label>

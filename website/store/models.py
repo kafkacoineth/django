@@ -82,6 +82,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     kyc_bank = models.CharField(max_length=25, blank=True)
     active_bank_acc_id = models.CharField(max_length=100, blank=True)
     wallet_address = models.CharField(max_length=100, blank=True)
+    x_handle = models.CharField(max_length=100, blank=True)
+    tg_handle = models.CharField(max_length=100, blank=True)
+    ig_handle = models.CharField(max_length=100, blank=True)
 
 
     USERNAME_FIELD = 'username'
