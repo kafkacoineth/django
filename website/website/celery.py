@@ -19,7 +19,7 @@ app.conf.beat_schedule = {
     },
     'my-periodic-task-balance': {
         'task': 'store.tasks.my_periodic_task_balance',
-        'schedule': crontab(minute=1, hour='*'),  # Run once an hour at the start of the hour
+        'schedule': crontab(minute=5, hour='*'),  # Run once an hour at the start of the hour
     },
 }
 
