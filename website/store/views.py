@@ -231,10 +231,12 @@ def add_wallet(request):
         try:
             # Parse JSON data from the request body
             json_data = json.loads(request.body.decode('utf-8'))
-            print(json_data.key)
-            print(json_data.value)
-            print(json_data.accountAddress)
-            print(json_data.signature)
+            print(json_data["key"])
+            print(json_data["accountAddress"])
+            #print(json_data.key)
+            #print(json_data.value)
+            #print(json_data.accountAddress)
+            #print(json_data.signature)
 
             print(json_data)
         except json.JSONDecodeError:
