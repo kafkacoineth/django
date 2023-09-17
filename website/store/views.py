@@ -53,9 +53,6 @@ import pytz
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-from eth_keys import keys
-from eth_utils import keccak
-from py_evm.main import get_default_account
 
 from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
