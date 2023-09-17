@@ -113,3 +113,13 @@ class PhoneVerification(models.Model):
     class Meta:
         verbose_name = "Phone Verification"
         verbose_name_plural = "Phone Verifications"
+
+class TokenRecord(models.Model):
+    contract_address = models.CharField(max_length=255)
+    token_id = models.IntegerField()  # Allow zero as a valid value
+    token_owner = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Token {self.token_id} - {self.token_owner}"
