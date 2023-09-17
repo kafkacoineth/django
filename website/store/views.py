@@ -54,39 +54,10 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 
-from Crypto.PublicKey import RSA
-from Crypto.Signature import pkcs1_15
-from Crypto.Hash import SHA256
+from eth_account import Account
+from web3 import Web3
 
 register = template.Library()
-
-def verify_signature(message, signer_public_key, signature):
-    try:
-        # Ensure the message is in bytes
-        if isinstance(message, str):
-            message = message.encode('utf-8')
-
-        # Convert the signature to bytes if it's in hex format
-        if not signature.startswith('0x'):
-            signature = '0x' + signature
-        signature = bytes.fromhex(signature[2:])
-
-        # Load the signer's public key
-        try:
-            public_key = RSA.import_key(signer_public_key)
-        except ValueError as ve:
-            print("Error: Unsupported RSA key format")
-            return False
-
-        # Calculate the message hash
-        message_hash = SHA256.new(message)
-
-        # Verify the signature
-        pkcs1_15.new(public_key).verify(message_hash, signature)
-        return True
-    except Exception as e:
-        print(e)  # Print the exception message
-        return False
 
 
 def get_csrf_token(request):
@@ -271,32 +242,27 @@ def add_wallet(request):
             signature = json_data["signature"]
 
 
-            your_public_key_variable_template = """
-            -----BEGIN PUBLIC KEY-----
-            YOUR_PUBLIC_KEY_HERE
-            -----END PUBLIC KEY-----
-            """
+            # Remove the "0x" prefix from the signature if it's present
+            if signature.startswith("0x"):
+                signature = signature[2:]
 
-            # Replace "YOUR_PUBLIC_KEY_HERE" with the actual public key
-            actual_public_key = "-----BEGIN PUBLIC KEY-----\nYOUR_ACTUAL_PUBLIC_KEY_HERE\n-----END PUBLIC KEY-----"
-            your_public_key_variable = your_public_key_variable_template.replace("YOUR_PUBLIC_KEY_HERE", signer_address)
-            print(your_public_key_variable)
+            # Convert the signature to bytes
+            signature_bytes = bytes.fromhex(signature)
 
             # Verify the signature
-            if verify_signature(message, your_public_key_variable, signature):
-                print(f"Signature is valid. The message was signed by the provided public key.")
+            w3 = Web3()
+            message_hash = Web3.keccak(text=message).hex()
+            recovered_address = Account.recoverHash(message_hash, signature=signature_bytes)
+
+            # Compare the recovered address with the provided address
+            if w3.toChecksumAddress(recovered_address) == w3.toChecksumAddress(signer_address):
                 user.wallet_address = signer_address
                 user.save()
+                print("Signature is valid!")
             else:
-                print("Signature is invalid.")
                 user.wallet_address = "0x00"
                 user.save()
                 print("Signature is invalid.")
-
-            #print(json_data.key)
-            #print(json_data.value)
-            #print(json_data.accountAddress)
-            #print(json_data.signature)
 
             print(json_data)
         except json.JSONDecodeError:
