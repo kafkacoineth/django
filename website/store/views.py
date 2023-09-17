@@ -268,8 +268,6 @@ def add_wallet(request):
             print(f"JSON Decode Error: {e}")
             return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
-
-
     return redirect('my_profile')
 
 @login_required
