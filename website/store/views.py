@@ -61,27 +61,27 @@ from Crypto.Hash import SHA256
 register = template.Library()
 
 def verify_signature(message, signer_public_key, signature):
-    # Ensure the message is in bytes
-    print("Verify Signature")
-    if isinstance(message, str):
-        message = message.encode('utf-8')
-
-    # Convert the signature to bytes if it's in hex format
-    if not signature.startswith('0x'):
-        signature = '0x' + signature
-    signature = bytes.fromhex(signature[2:])
-
-    # Load the signer's public key
-    public_key = RSA.import_key(signer_public_key)
-
-    # Calculate the message hash
-    message_hash = SHA256.new(message)
-
     try:
+        # Ensure the message is in bytes
+        if isinstance(message, str):
+            message = message.encode('utf-8')
+
+        # Convert the signature to bytes if it's in hex format
+        if not signature.startswith('0x'):
+            signature = '0x' + signature
+        signature = bytes.fromhex(signature[2:])
+
+        # Load the signer's public key
+        public_key = RSA.import_key(signer_public_key)
+
+        # Calculate the message hash
+        message_hash = SHA256.new(message)
+
         # Verify the signature
         pkcs1_15.new(public_key).verify(message_hash, signature)
         return True
-    except (ValueError, TypeError):
+    except Exception as e:
+        print(e)  # Print the exception message
         return False
 
 def get_csrf_token(request):
