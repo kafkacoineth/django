@@ -29,8 +29,6 @@ app = Celery('store')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Load task modules from all registered Django app configs.
-app.autodiscover_tasks()
-
 
 app.conf.beat_schedule = {
     'my-periodic-task': {
@@ -38,6 +36,9 @@ app.conf.beat_schedule = {
         'schedule': 30,  # Run every 30 seconds
     },
 }
+
+app.autodiscover_tasks()
+
 
 
 
