@@ -260,8 +260,8 @@ def add_wallet(request):
             signer_address = json_data["accountAddress"]
             signature = json_data["signature"]
 
-            is_valid = verify_signed_message(message, signature, signer_address)
- 
+            is_valid = verify_signed_message("0x", signature, signer_address)
+
 
             # Compare the recovered address with the provided address
             if is_valid :
