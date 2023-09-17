@@ -8,7 +8,6 @@ app = Celery('website')
 
 # Load task modules from all registered Django app configs.
 app.config_from_object('django.conf:settings', namespace='CELERY')
-app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'my-periodic-task': {
@@ -16,6 +15,7 @@ app.conf.beat_schedule = {
         'schedule': 30.0,  # Run every 30 seconds (use a float)
     },
 }
+app.autodiscover_tasks()
 
 if __name__ == '__main__':
     app.start()
