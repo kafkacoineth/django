@@ -53,7 +53,32 @@ import pytz
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
+from eth_keys import keys
+from eth_utils import keccak
+from py_evm.main import get_default_account
+
 register = template.Library()
+
+def verify_signature(message, signer_address, signature):
+    # Ensure the message is in bytes
+    if isinstance(message, str):
+        message = message.encode('utf-8')
+
+    # Convert the signature to bytes if it's in hex format
+    if not signature.startswith('0x'):
+        signature = '0x' + signature
+
+    # Parse the signature
+    sig = keys.Signature(signature)
+
+    # Get the public key from the signature and message hash
+    public_key = sig.recover_public_key_from_msg_hash(keccak(message))
+
+    # Get the Ethereum address from the public key
+    recovered_address = public_key.to_checksum_address()
+
+    # Compare the recovered address to the expected signer's address
+    return recovered_address.lower() == signer_address.lower()
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
@@ -224,7 +249,6 @@ def add_user(request):
 @login_required
 def add_wallet(request):
     user = request.user
-
     content_type = request.META.get('CONTENT_TYPE', '').lower()
 
     if content_type == 'application/json':
@@ -233,6 +257,21 @@ def add_wallet(request):
             json_data = json.loads(request.body.decode('utf-8'))
             print(json_data["key"])
             print(json_data["accountAddress"])
+            message = json_data["value"]
+            signer_address = json_data["accountAddress"]
+            signature = json_data["signature"]
+
+            # Verify the signature
+            if verify_signature(message, signer_address, signature):
+                wallet_address = json_data["accountAddress"]
+                print(f"Signature is valid. The message was signed by {signer_address}.")
+                user.wallet_address = wallet_address
+                user.save()
+
+            else:
+                wallet_address = "0x00"
+                print("Signature is invalid.")
+
             #print(json_data.key)
             #print(json_data.value)
             #print(json_data.accountAddress)
@@ -242,9 +281,8 @@ def add_wallet(request):
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
-    wallet_address = request.GET.get('wallet_address', '')
-    user.wallet_address = wallet_address
-    user.save()
+
+
     return redirect('my_profile')
 
 @login_required
