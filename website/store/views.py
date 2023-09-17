@@ -507,14 +507,7 @@ def my_profile(request):
     if user.email_isVerified == False:
         return redirect('verify_email')
 
-    id_number = request.POST.get('idNumber', '')
-    if user.solidfi == None or user.solidfi == '' and id_number == '':
-        return redirect('add_ssn_dob')
 
-
-
-    print("User:", user)
-    print("User DOB:",  user.dateOfBirth)
     if request.method == 'POST':
         print("POST request detected")
         print("Profile form saved")
@@ -522,97 +515,13 @@ def my_profile(request):
         first_name = request.POST.get('firstName')
         middle_name = request.POST.get('middleName')
         last_name = request.POST.get('lastName')
-        phone = request.POST.get('phone')
-        email = request.POST.get('email')
-        date_of_birth = request.POST.get('dateOfBirth')
-        id_type = request.POST.get('idType')
-        id_number = request.POST.get('idNumber')
 
-        line1 = request.POST.get('line1')
-        line2 = request.POST.get('line2')
-        city = request.POST.get('city')
-        state = request.POST.get('state')
-        country = request.POST.get('country')
-        postalCode = request.POST.get('postalCode')
-        # Print the extracted values
-        print("First Name:", first_name)
-        print("Middle Name:", middle_name)
-        print("Last Name:", last_name)
-        print("Phone:", phone)
-        print("Email:", email)
-        print("Date of Birth:", date_of_birth)
-        print("ID Type:", id_type)
-        print("ID Number:", id_number)
 
-        user.dateOfBirth = datetime.datetime.strptime(date_of_birth, '%Y-%m-%d').date()
 
-        api_key = os.environ.get('SOLIDFI')
-        print(api_key)
-
-        base_url = "https://test-api.solidfi.com"
-
-        # Endpoint URL
-        url = f"{base_url}/v1/person"
-
-        # Request data
-        data = {
-            "firstName": first_name,
-            "middleName": middle_name,
-            "lastName": last_name,
-            "phone": phone,
-            "email": email,
-            "dateOfBirth": str(datetime.datetime.strptime(date_of_birth, '%Y-%m-%d').date()),
-            "idNumber": id_number,
-            "idType": id_type,
-            "address": {
-                "addressType": "mailing",
-                "line1": line1,
-                "line2": line2,
-                "city": city,
-                "state": state,
-                "country": country,
-                "postalCode": postalCode
-            }
-        }
-        print(data)
-
-        headers = {
-            "Content-Type": "application/json",
-            "sd-api-key": api_key
-        }
-
-        # Make the POST request
-        responseapi = requests.post(url, json=data, headers=headers)
-
-        # Check if the request was successful
-        if responseapi.status_code == 201:
-            person_data = responseapi.json()
-            print("Person created successfully:")
-            print("Person ID:", person_data["id"])
-            print("First Name:", person_data["firstName"])
-            print("Last Name:", person_data["lastName"])
-            print("Email:", person_data["email"])
-            user.solidfi = person_data["id"]
-        else:
-            print("Failed to create person. Status code:", responseapi.status_code)
-            print("Response content:", responseapi.content)
         try:
-            user.idType = id_type
-            user.idNumber = id_number
             user.first_name = first_name
             user.last_name = last_name
             user.m_name = middle_name
-            user.phone = phone
-            user.idNumber = id_number
-            user.idType = id_type
-            user.mailaddtype = 'mailing'
-            user.billing_address_line1 = line1
-            user.billing_address_line2 = line2
-            user.billing_city = city
-            user.billing_state = state
-            user.billing_country = country
-            user.billing_zipcode = postalCode
-            print(user.billing_country)
             user.save()
         except Exception as e:
             print("Error saving user:", e)
@@ -620,123 +529,11 @@ def my_profile(request):
     else:
         print("PRINT GET request detected")
 
-    if user.dateOfBirth:
-        formatted_date_of_birth = user.dateOfBirth.strftime('%m/%d/%Y')
-    else:
-        # Set to a specific date in the 80s
-        formatted_date_of_birth = '01/01/1985'
-
-    print(user.billing_country)
-    accounts = None
-    if user.solidfi :
-
-        api_key = os.environ.get('SOLIDFI')
-        base_url = "https://test-api.solidfi.com"
-
-        headers = {
-            "Content-Type": "application/json",
-            "sd-api-key": api_key,
-            "sd-person-id": user.solidfi
-        }
-
-        # Example: Creating a Person
-        create_person_url = f"{base_url}/v1/person"
-        create_person_response = requests.post(create_person_url, headers=headers)
-        create_person_data = create_person_response.json()
-        created_person_id = create_person_data.get("personId")
-
-        if created_person_id:
-            print("Person created with ID:", created_person_id)
-        else:
-            print("Failed to create person.")
-
-        # Example: Making a GET request using the created person ID
-        get_person_url = f"{base_url}/v1/person"
-        get_person_response = requests.get(get_person_url, headers=headers)
-        get_person_data = get_person_response.json()
-
-        print("Fetched person data:", get_person_data)
-
-        # Access the 'idv' value
-        idv_value = get_person_data['kyc']['results']['idv']
-
-        if idv_value == 'notStarted':
-            return redirect('add_idv')
-
-        kyc_address = get_person_data['kyc']['results']['address']
-        kyc_dateOfBirth = get_person_data['kyc']['results']['dateOfBirth']
-        kyc_fraud = get_person_data['kyc']['results']['fraud']
-        kyc_bank = get_person_data['kyc']['results']['bank']
-
-        print("IDV Value:", idv_value)
-        print("KYC ADDRESS Value:", kyc_address)
-        user.idv_value = idv_value
-        user.kyc_address = kyc_address
-        user.kyc_dateOfBirth = kyc_dateOfBirth
-        user.kyc_fraud = kyc_fraud
-        user.kyc_bank = kyc_bank
-        user.save()
-
-    kyc_is_approved = (
-        user.kyc_address == "approved" and
-        user.kyc_dateOfBirth == "approved" and
-        user.kyc_fraud == "approved" and
-        user.kyc_bank == "approved"
-    )
-    if kyc_is_approved :
-        api_key = os.environ.get('SOLIDFI')
-        base_url = "https://test-api.solidfi.com/v1/account"
-
-        headers = {
-            "Content-Type": "application/json",
-            "sd-api-key": api_key,
-            "sd-person-id": user.solidfi
-        }
-        params = {
-            "offset": 0,
-            "limit": 25,
-            "status": "active",
-            "type": "personalChecking",
-            # Add other filters as needed
-        }
-
-        # Make the GET request to the API
-        response = requests.get(base_url, params=params, headers=headers)
-
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            data = response.json()
-
-            # Extract and print relevant account information
-            total_accounts = data["total"]
-            print(f"Total accounts: {total_accounts}")
-
-            accounts = data["data"]
-            for account in accounts:
-                account_id = account["id"]
-                account_label = account["label"]
-                account_type = account["type"]
-                account_status = account["status"]
-                account_balance = account["availableBalance"]
-
-                print(f"Account ID: {account_id}")
-                print(f"Label: {account_label}")
-                print(f"Type: {account_type}")
-                print(f"Status: {account_status}")
-                print(f"Available Balance: {account_balance}")
-                print("------")
-        else:
-            print(f"Request failed with status code: {response.status_code}")
-
-
     context = {
-        'user': user,
-        'date_of_birth_formatted': formatted_date_of_birth,
-        'kyc_is_approved': kyc_is_approved,
-        'accounts': accounts
+        'user': user
     }
 
-    return render(request, 'my_profile.html', context)
+    return render(request, 'my_profile_kafka.html', context)
 
 
 @login_required
