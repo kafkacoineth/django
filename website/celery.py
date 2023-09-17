@@ -13,7 +13,7 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'my-periodic-task': {
         'task': 'store.tasks.my_periodic_task',
-        'schedule': 30,  # Run every 30 seconds
+        'schedule': 30.0,  # Run every 30 seconds (use a float)
     },
 }
 
