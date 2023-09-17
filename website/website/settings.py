@@ -35,9 +35,10 @@ app.autodiscover_tasks()
 CELERY_BEAT_SCHEDULE = {
     'my-periodic-task': {
         'task': 'store.tasks.my_periodic_task',
-        'schedule': crontab(minute=1, hour=0),  # Run at midnight every day
+        'schedule': crontab(second='*/30'),  # Run every 30 seconds
     },
 }
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
