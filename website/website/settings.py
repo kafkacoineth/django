@@ -20,16 +20,9 @@ from celery.schedules import crontab
 
 
 
-# Set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings')
-
 app = Celery('store')
-
-# Using Redis as the message broker
 app.config_from_object('django.conf:settings', namespace='CELERY')
-
-# Load task modules from all registered Django app configs.
-
+app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'my-periodic-task': {
         'task': 'store.tasks.my_periodic_task',
@@ -37,7 +30,6 @@ app.conf.beat_schedule = {
     },
 }
 
-app.autodiscover_tasks()
 
 
 
