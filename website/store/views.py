@@ -160,7 +160,7 @@ def add_user(request):
                     user.set_password(form.cleaned_data['password'])
                     user.phone = phone
                     user.save()
-
+                    print("USER SAVED")
                     # Authenticate the user after registration
                     user = authenticate(username=user.username, password=form.cleaned_data['password'])
                     if user is not None:
