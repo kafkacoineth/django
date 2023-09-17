@@ -224,6 +224,17 @@ def add_user(request):
 @login_required
 def add_wallet(request):
     user = request.user
+
+    content_type = request.META.get('CONTENT_TYPE', '').lower()
+
+    if content_type == 'application/json':
+        try:
+            # Parse JSON data from the request body
+            json_data = json.loads(request.body.decode('utf-8'))
+            print(json_data)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+
     wallet_address = request.GET.get('wallet_address', '')
     user.wallet_address = wallet_address
     user.save()
