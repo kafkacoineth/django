@@ -39,7 +39,7 @@ from django.db.models import Q
 
 import json
 
-from .models import UserManager, BankAccount, PhoneVerification
+from .models import UserManager, BankAccount, PhoneVerification, TokenRecord, TokenBalance
 from .forms import UserCreationForm, EditProfileForm
 
 import stripe
@@ -266,7 +266,7 @@ def get_wallet_history(request):
 
     for balance in token_balances:
         print(f"Token Balance: {balance}")
-        
+
     # Create a dictionary to store the combined data
     wallet_history = {
         'token_records': [record.__str__() for record in token_records],
