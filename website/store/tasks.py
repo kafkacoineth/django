@@ -9,6 +9,8 @@ from .forms import UserCreationForm, EditProfileForm
 from web3 import Web3
 #celery_app = Celery('store')
 
+app = Celery('website')
+
 @shared_task
 def my_periodic_task():
     # Your task logic goes here

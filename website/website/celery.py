@@ -2,7 +2,8 @@ from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
 from celery.schedules import crontab
-
+#celery -A website worker --loglevel=info
+#celery -A website.celery beat --loglevel=info
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings')
 
 app = Celery('website')
