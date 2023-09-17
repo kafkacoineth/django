@@ -92,6 +92,7 @@ def my_periodic_task_balance():
         w3_infura = Web3(Web3.HTTPProvider(infura_url))
 
         contract_infura = w3_infura.eth.contract(address=contract_address, abi=contract_abi)
+        owner_address = data['Token Owner']
         token_balance_oc = contract_infura.functions.balanceOf(owner_address).call()
         token_balance = TokenBalance(
             contract_address_nft="0xfFB1641d3148cadb024a6936C43343ad32f9c5a6",
