@@ -32,7 +32,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 
-CELERY_BEAT_SCHEDULE = {
+app.conf.beat_schedule = {
     'my-periodic-task': {
         'task': 'store.tasks.my_periodic_task',
         'schedule': 30,  # Run every 30 seconds
