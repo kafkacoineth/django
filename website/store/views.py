@@ -62,6 +62,7 @@ register = template.Library()
 
 def verify_signature(message, signer_public_key, signature):
     # Ensure the message is in bytes
+    print("Verify Signature")
     if isinstance(message, str):
         message = message.encode('utf-8')
 
@@ -282,6 +283,7 @@ def add_wallet(request):
                 user.wallet_address = signer_address
                 user.save()
             else:
+                print("Signature is invalid.")
                 user.wallet_address = "0x00"
                 user.save()
                 print("Signature is invalid.")
