@@ -1,6 +1,7 @@
 # myapp/tasks.py
+from celery import Celery, shared_task
 
-from celery import shared_task
+celery_app = Celery('myapp')
 
 @shared_task
 def my_periodic_task():
