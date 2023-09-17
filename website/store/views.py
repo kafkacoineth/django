@@ -56,9 +56,28 @@ from sendgrid.helpers.mail import Mail
 
 from eth_account import Account
 from web3 import Web3
+from eth_account.messages import encode_defunct
+import time
+import eth_keys.exceptions
 
 register = template.Library()
 
+def verify_signed_message(message, signature, public_address):
+    # Skip signature verification if signature, account address, or message is empty
+    if not signature or not public_address or not message:
+        return False
+
+    message = encode_defunct(text=message)
+
+    # Verify the signature
+    try:
+        signer = Account.recover_message(message, signature=signature)
+    except:
+        # Signature verification failed
+        return False
+
+    # Verify if the signer's address matches the provided public address
+    return signer == public_address
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
@@ -241,20 +260,11 @@ def add_wallet(request):
             signer_address = json_data["accountAddress"]
             signature = json_data["signature"]
 
-            # Remove the "0x" prefix from the signature if it's present
-            if signature.startswith("0x"):
-                signature = signature[2:]
-
-            # Convert the signature to bytes
-            signature_bytes = bytes.fromhex(signature)
-
-            # Verify the signature
-            w3 = Web3()
-            message_hash = Web3.keccak(text=message).hex()
-            recovered_address = w3.eth.account.recover(message_hash, signature=signature_bytes)
+            is_valid = verify_signed_message(message, signature, signer_address)
+ 
 
             # Compare the recovered address with the provided address
-            if w3.toChecksumAddress(recovered_address) == w3.toChecksumAddress(signer_address):
+            if is_valid :
                 user.wallet_address = signer_address
                 user.save()
                 print("Signature is valid!")
