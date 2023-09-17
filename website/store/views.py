@@ -256,11 +256,12 @@ def add_wallet(request):
             json_data = json.loads(request.body.decode('utf-8'))
             print(json_data["key"])
             print(json_data["accountAddress"])
+            key = json_data["key"]
             message = json_data["value"]
             signer_address = json_data["accountAddress"]
             signature = json_data["signature"]
 
-            is_valid = verify_signed_message("0x", signature, signer_address)
+            is_valid = verify_signed_message(key, signature, signer_address)
 
 
             # Compare the recovered address with the provided address
