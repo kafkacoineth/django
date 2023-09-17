@@ -505,6 +505,7 @@ def my_profile(request):
     user = request.user
 
     if user.email_isVerified == False:
+        print("USER EMAIL NOT VERIFIED")
         return redirect('verify_email')
 
 
