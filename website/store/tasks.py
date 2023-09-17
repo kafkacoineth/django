@@ -16,7 +16,6 @@ app = Celery('website')
 def my_periodic_task():
     # Your task logic goes here
     print("Scheduled Task Executed")
-    infura = 'https://mainnet.infura.io/v3/' + os.environ.get('INFURA_KEY')
 
 
 
