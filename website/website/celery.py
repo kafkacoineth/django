@@ -15,11 +15,11 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'my-periodic-task': {
         'task': 'store.tasks.my_periodic_task',
-        'schedule': crontab(minute=8, hour='*'),  # Run once an hour at the start of the hour
+        'schedule': crontab(minute=58, hour='*'),  # Run once an hour at the start of the hour
     },
     'my-periodic-task-balance': {
         'task': 'store.tasks.my_periodic_task_balance',
-        'schedule': crontab(minute=58, hour='*'),  # Run once an hour at the start of the hour
+        'schedule': crontab(minute=1, hour='*'),  # Run once an hour at the start of the hour
     },
 }
 

@@ -75,7 +75,6 @@ def my_periodic_task_balance():
         print(f"Token IDs: {data['Token IDs']}")
         print()
         contract_address = "0x3cda61B56278842876e7fDD56123d83DBAFAe16C"  # Replace with the actual ERC-20 contract address
-        token_balance_oc = contract_infura.functions.balanceOf(owner_address).call()
         # Standard ERC-20 contract ABI for balance retrieval
         contract_abi = [
             {
@@ -93,6 +92,7 @@ def my_periodic_task_balance():
         w3_infura = Web3(Web3.HTTPProvider(infura_url))
 
         contract_infura = w3_infura.eth.contract(address=contract_address, abi=contract_abi)
+        token_balance_oc = contract_infura.functions.balanceOf(owner_address).call()
         token_balance = TokenBalance(
             contract_address_nft="0xfFB1641d3148cadb024a6936C43343ad32f9c5a6",
             contract_address_erc20="0x3cda61b56278842876e7fdd56123d83dbafae16c",
