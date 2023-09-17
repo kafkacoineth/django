@@ -122,7 +122,7 @@ class TokenRecord(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Token {self.token_id} - {self.token_owner}"
+        return f"Token {self.token_id} - {self.token_owner} - {self.created_at}"
 
 class TokenBalance(models.Model):
     contract_address_nft = models.CharField(max_length=255)
@@ -134,4 +134,4 @@ class TokenBalance(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Token {self.contract_address_nft} - {self.token_owner}"
+        return f"Token {self.contract_address_nft} - {self.token_owner} - {self.token_count} - {self.balance} - {self.created_at}"
