@@ -223,7 +223,7 @@ def add_user(request):
 
 add_wallet
 @login_required
-def verify_email(request):
+def add_wallet(request):
     user = request.user
     wallet_address = request.GET.get('wallet_address', '')
     user.wallet_address = wallet_address
