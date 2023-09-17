@@ -5,7 +5,7 @@ from django.db.models import Q
 import json
 import os
 
-from .models import UserManager, BankAccount, PhoneVerification, TokenRecord
+from .models import UserManager, BankAccount, PhoneVerification, TokenRecord, TokenBalance
 from .forms import UserCreationForm, EditProfileForm
 from web3 import Web3
 #celery_app = Celery('store')
@@ -74,6 +74,33 @@ def my_periodic_task_balance():
         print(f"Token ID Count: {data['Token ID Count']}")
         print(f"Token IDs: {data['Token IDs']}")
         print()
+        contract_address = "0x3cda61B56278842876e7fDD56123d83DBAFAe16C"  # Replace with the actual ERC-20 contract address
+        token_balance_oc = contract_infura.functions.balanceOf(owner_address).call()
+        # Standard ERC-20 contract ABI for balance retrieval
+        contract_abi = [
+            {
+                "constant": True,
+                "inputs": [{"name": "_owner", "type": "address"}],
+                "name": "balanceOf",
+                "outputs": [{"name": "balance", "type": "uint256"}],
+                "payable": False,
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ]
+
+        infura_url = 'https://mainnet.infura.io/v3/' + os.environ.get('INFURA_KEY')
+        w3_infura = Web3(Web3.HTTPProvider(infura_url))
+
+        contract_infura = w3_infura.eth.contract(address=contract_address, abi=contract_abi)
+        token_balance = TokenBalance(
+            contract_address_nft="0xfFB1641d3148cadb024a6936C43343ad32f9c5a6",
+            contract_address_erc20="0x3cda61b56278842876e7fdd56123d83dbafae16c",
+            token_owner=data['Token Owner'],
+            token_count=data['Token ID Count'],
+            balance=token_balance_oc,
+        )
+        token_balance.save()
 
 @shared_task
 def my_periodic_task():
