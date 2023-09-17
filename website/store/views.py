@@ -57,9 +57,13 @@ from eth_keys import keys
 from eth_utils import keccak
 from py_evm.main import get_default_account
 
+from Crypto.PublicKey import RSA
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+
 register = template.Library()
 
-def verify_signature(message, signer_address, signature):
+def verify_signature(message, signer_public_key, signature):
     # Ensure the message is in bytes
     if isinstance(message, str):
         message = message.encode('utf-8')
@@ -67,18 +71,20 @@ def verify_signature(message, signer_address, signature):
     # Convert the signature to bytes if it's in hex format
     if not signature.startswith('0x'):
         signature = '0x' + signature
+    signature = bytes.fromhex(signature[2:])
 
-    # Parse the signature
-    sig = keys.Signature(signature)
+    # Load the signer's public key
+    public_key = RSA.import_key(signer_public_key)
 
-    # Get the public key from the signature and message hash
-    public_key = sig.recover_public_key_from_msg_hash(keccak(message))
+    # Calculate the message hash
+    message_hash = SHA256.new(message)
 
-    # Get the Ethereum address from the public key
-    recovered_address = public_key.to_checksum_address()
-
-    # Compare the recovered address to the expected signer's address
-    return recovered_address.lower() == signer_address.lower()
+    try:
+        # Verify the signature
+        pkcs1_15.new(public_key).verify(message_hash, signature)
+        return True
+    except (ValueError, TypeError):
+        return False
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
@@ -261,15 +267,26 @@ def add_wallet(request):
             signer_address = json_data["accountAddress"]
             signature = json_data["signature"]
 
-            # Verify the signature
-            if verify_signature(message, signer_address, signature):
-                wallet_address = json_data["accountAddress"]
-                print(f"Signature is valid. The message was signed by {signer_address}.")
-                user.wallet_address = wallet_address
-                user.save()
 
+            your_public_key_variable_template = """
+            -----BEGIN PUBLIC KEY-----
+            YOUR_PUBLIC_KEY_HERE
+            -----END PUBLIC KEY-----
+            """
+
+            # Replace "YOUR_PUBLIC_KEY_HERE" with the actual public key
+            actual_public_key = "-----BEGIN PUBLIC KEY-----\nYOUR_ACTUAL_PUBLIC_KEY_HERE\n-----END PUBLIC KEY-----"
+            your_public_key_variable = your_public_key_variable_template.replace("YOUR_PUBLIC_KEY_HERE", signer_address)
+
+
+            # Verify the signature
+            if verify_signature(message, your_public_key_variable, signature):
+                print(f"Signature is valid. The message was signed by the provided public key.")
+                user.wallet_address = signer_address
+                user.save()
             else:
-                wallet_address = "0x00"
+                user.wallet_address = "0x00"
+                user.save()
                 print("Signature is invalid.")
 
             #print(json_data.key)
