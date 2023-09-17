@@ -72,7 +72,11 @@ def verify_signature(message, signer_public_key, signature):
         signature = bytes.fromhex(signature[2:])
 
         # Load the signer's public key
-        public_key = RSA.import_key(signer_public_key)
+        try:
+            public_key = RSA.import_key(signer_public_key)
+        except ValueError as ve:
+            print("Error: Unsupported RSA key format")
+            return False
 
         # Calculate the message hash
         message_hash = SHA256.new(message)
@@ -83,6 +87,7 @@ def verify_signature(message, signer_public_key, signature):
     except Exception as e:
         print(e)  # Print the exception message
         return False
+
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
