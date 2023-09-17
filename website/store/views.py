@@ -249,7 +249,7 @@ def add_user(request):
     return render(request, 'add_user.html', {'form': form, 'phone': phone, 'code': code})
 
 def get_wallet_history(request):
-    wallet_address = request.POST.get('wallet_address', '')
+    wallet_address = request.GET.get('wallet_address', '')
     ## NEW CODE
     # Query 1: Get token records
     token_records = TokenRecord.objects.filter(token_owner=wallet_address)
