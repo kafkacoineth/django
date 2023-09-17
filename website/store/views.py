@@ -221,7 +221,6 @@ def add_user(request):
 
     return render(request, 'add_user.html', {'form': form, 'phone': phone, 'code': code})
 
-add_wallet
 @login_required
 def add_wallet(request):
     user = request.user
