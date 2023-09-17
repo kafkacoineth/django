@@ -9,12 +9,14 @@ app = Celery('website')
 # Load task modules from all registered Django app configs.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
+
 app.conf.beat_schedule = {
     'my-periodic-task': {
         'task': 'store.tasks.my_periodic_task',
-        'schedule': 30.0,  # Run every 30 seconds (use a float)
+        'schedule': crontab(minute=0, hour='*'),  # Run once an hour at the start of the hour
     },
 }
+
 app.autodiscover_tasks()
 
 if __name__ == '__main__':
