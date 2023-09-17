@@ -14,6 +14,12 @@ from pathlib import Path
 
 
 
+CELERY_BROKER_URL = 'pyamqp://guest:guest@localhost:5672//'
+CELERY_TIMEZONE = 'UTC'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_IMPORTS = ('store.tasks',)  # Replace with your task module(s)
 
 
 
