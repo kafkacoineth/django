@@ -287,7 +287,12 @@ def get_leaders(request):
 
         serialized_leaders.append(leader_info)
 
-    return JsonResponse({'leaders': serialized_leaders})
+    # Create a JSON object to wrap the serialized leaders
+    response_data = {
+        'leaders': serialized_leaders
+    }
+
+    return JsonResponse(response_data)
 
 def get_wallet_history(request):
     wallet_address = request.GET.get('wallet_address', '')
