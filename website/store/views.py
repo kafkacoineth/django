@@ -266,13 +266,13 @@ def get_leaders(request):
     serialized_leaders = []
     for leader in leaders:
         leader_info = {
-            'token_owner': leader.token_owner.username,
+            'token_owner': leader.token_owner,
             'token_count': leader.token_count,
             'balance': float(leader.balance),
         }
 
         # Check if there is a User associated with the leader's wallet_address
-        associated_users = user_map.get(leader.token_owner.wallet_address, [])
+        associated_users = user_map.get(leader.token_owner, [])
         if associated_users:
             # Serialize the User information and add it to the leader's info
             leader_info['associated_users'] = [
