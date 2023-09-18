@@ -248,6 +248,46 @@ def add_user(request):
 
     return render(request, 'add_user.html', {'form': form, 'phone': phone, 'code': code})
 
+def get_leaders(request):
+    # Query TokenBalance and order by token_count in descending order
+    leaders = TokenBalance.objects.order_by('-token_count')[:10]
+
+    # Create a dictionary (map) to store User objects by wallet_address
+    user_map = defaultdict(list)
+
+    # Query User objects and populate the dictionary by wallet_address
+    users = User.objects.all()
+    for user in users:
+        if user.wallet_address:
+            user_map[user.wallet_address].append(user)
+
+    # Serialize leaders into a JSON response with associated User information
+    serialized_leaders = []
+    for leader in leaders:
+        leader_info = {
+            'token_owner': leader.token_owner.username,
+            'token_count': leader.token_count,
+            'balance': float(leader.balance),
+        }
+
+        # Check if there is a User associated with the leader's wallet_address
+        associated_users = user_map.get(leader.token_owner.wallet_address, [])
+        if associated_users:
+            # Serialize the User information and add it to the leader's info
+            leader_info['associated_users'] = [
+                {
+                    'username': user.username,
+                    'email': user.email,
+                    'x_handle': user.x_handle,  # Include the x_handle field
+                    # Add other user fields as needed
+                }
+                for user in associated_users
+            ]
+
+        serialized_leaders.append(leader_info)
+
+    return JsonResponse({'leaders': serialized_leaders})
+
 def get_wallet_history(request):
     wallet_address = request.GET.get('wallet_address', '')
     ## NEW CODE
