@@ -59,6 +59,7 @@ from web3 import Web3
 from eth_account.messages import encode_defunct
 import time
 import eth_keys.exceptions
+from collections import defaultdict
 
 register = template.Library()
 
