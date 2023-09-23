@@ -64,8 +64,8 @@ SOCIAL_AUTH_PIPELINE = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.kafkacoineth.com', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://www.kafkacoineth.com']
+ALLOWED_HOSTS = ['www.browniecoins.org', 'browniecoins.org', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://www.kafkacoineth.com', 'https://kafkacoineth.com']
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -77,7 +77,7 @@ X_CSRF_TOKEN_HEADER = 'X-CSRF-TOKEN'
 
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = "none"
-LOGIN_REDIRECT_URL = "https://motoverse.app/accounts/google/login/callback/"
+LOGIN_REDIRECT_URL = "https://browniecoins.org/accounts/google/login/callback/"
 LOGOUT_REDIRECT_URL = "/"
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
