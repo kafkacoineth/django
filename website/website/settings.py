@@ -77,8 +77,8 @@ X_CSRF_TOKEN_HEADER = 'X-CSRF-TOKEN'
 
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = "none"
-LOGIN_REDIRECT_URL = "https://browniecoins.org/home/"
-LOGOUT_REDIRECT_URL = "https://browniecoins.org/home/"
+LOGIN_REDIRECT_URL = "/home/"
+LOGOUT_REDIRECT_URL = "/home/"
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APP": {
