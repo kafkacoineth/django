@@ -74,7 +74,7 @@ def my_periodic_task_balance():
         print(f"Token ID Count: {data['Token ID Count']}")
         print(f"Token IDs: {data['Token IDs']}")
         print()
-        contract_address = "0x3cda61B56278842876e7fDD56123d83DBAFAe16C"  # Replace with the actual ERC-20 contract address
+        contract_address = "0x0d2f8EE4194D79bBF4fee6c1f14ea5a0f5075b13"  # Replace with the actual ERC-20 contract address
         # Standard ERC-20 contract ABI for balance retrieval
         contract_abi = [
             {
@@ -95,8 +95,8 @@ def my_periodic_task_balance():
         owner_address = data['Token Owner']
         token_balance_oc = contract_infura.functions.balanceOf(owner_address).call()
         token_balance = TokenBalance(
-            contract_address_nft="0xfFB1641d3148cadb024a6936C43343ad32f9c5a6",
-            contract_address_erc20="0x3cda61b56278842876e7fdd56123d83dbafae16c",
+            contract_address_nft="0xD732789CDA5FCd978A26B3F58F658CD0885f8327",
+            contract_address_erc20="0x0d2f8EE4194D79bBF4fee6c1f14ea5a0f5075b13",
             token_owner=data['Token Owner'],
             token_count=data['Token ID Count'],
             balance=token_balance_oc,
@@ -112,7 +112,7 @@ def my_periodic_task():
 
 
     # Address of the ERC-721 contract
-    contract_address = "0xfFB1641d3148cadb024a6936C43343ad32f9c5a6"
+    contract_address = "0xD732789CDA5FCd978A26B3F58F658CD0885f8327"
 
     # ABI of the ERC-721 contract
     contract_abi = [
