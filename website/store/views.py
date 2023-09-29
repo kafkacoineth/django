@@ -251,7 +251,7 @@ def add_user(request):
 
 def get_leaders(request):
     # Query TokenBalance and order by token_count in descending order
-    leaders = TokenBalance.objects.order_by('-token_count')[:10]
+    leaders = TokenBalance.objects.order_by('-token_count')[:5]
 
     # Create a dictionary (map) to store User objects by wallet_address
     user_map = defaultdict(list)
